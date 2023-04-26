@@ -1,0 +1,27 @@
+version: '1.0'
+stages:
+ - prepare
+ - build
+ - test
+steps:
+  main_clone:
+    title: Cloning main repository...
+    stage: prepare
+    type: git-clone
+    repo: 'codefreshdemo/cf-example-python-django'
+    revision: master
+    git: github
+  build_my_image:
+    title: Building Docker Image
+    stage: build
+    type: build
+    image_name: my-django-image
+    working_directory: ./
+    tag: master
+    dockerfile: Dockerfile
+  test_my_image:
+     title: Running unit tests
+     stage: test
+     image: '${{build_my_image}}'
+     commands:
+       - python -m unittest composeexample.utils     
